@@ -8,8 +8,15 @@ env ETCD_LISTEN_CLIENT_URLS=http://${IP}:2379
 env ETCD_ADVERTISE_CLIENT_URLS=http://${IP}:2379
 env ETCD_NAME=$HOSTNAME
 
-env DISCOVERY="$(curl -w "\n" 'https://discovery.etcd.io/new?size=3')"
+#env DISCOVERY="$(curl -w "\n" 'https://discovery.etcd.io/new?size=3')"
 
-/usr/local/bin/etcd
+/usr/local/bin/etcd \
+  -name $HOSTNAME -initial-advertise-peer-urls http://$IP:2380 \
+  -listen-peer-urls http://$IP:2380 \
+  -listen-client-urls http://$IP:2379,http://127.0.0.1:2379 \
+  -advertise-client-urls http://$IP:2379 \
+  -initial-cluster-token etcd-cluster-1 \
+  -initial-cluster etcd-01=http://10.2.242.114:2380,etcd-02=http://10.2.242.224:2380,etcd-03=http://10.2.242.138:2380 \
+  -initial-cluster-state new
 
 #>>/var/log/etcd.log 2>&1
