@@ -1,22 +1,39 @@
-env ETCD_INITIAL_CLUSTER="etcd-01=http://10.2.242.114:2380,etcd-02=http://10.2.242.224:2380,etcd-03=http://10.2.242.138:2380"
-env ETCD_INITIAL_CLUSTER_STATE="new"
-env ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster-01"
-env ETCD_INITIAL_ADVERTISE_PEER_URLS=http://${IP}:2380
-env ETCD_DATA_DIR="/var/dtank/etcd"
+#env ETCD_INITIAL_CLUSTER="etcd-01=http://10.2.242.114:2380,etcd-02=http://10.2.242.224:2380,etcd-03=http://10.2.242.138:2380"
+#env ETCD_INITIAL_CLUSTER_STATE="new"
+#env ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster-01"
 env ETCD_LISTEN_PEER_URLS=http://${IP}:2380
-env ETCD_LISTEN_CLIENT_URLS=http://${IP}:2379
-env ETCD_ADVERTISE_CLIENT_URLS=http://${IP}:2379
-env ETCD_NAME=$HOSTNAME
+###env ETCD_INITIAL_ADVERTISE_PEER_URLS=http://${IP}:2380
+#env ETCD_LISTEN_CLIENT_URLS=http://${IP}:2379
+#env ETCD_ADVERTISE_CLIENT_URLS=http://${IP}:2379
+#env ETCD_NAME=$HOSTNAME
 
-#env DISCOVERY="$(curl -w "\n" 'https://discovery.etcd.io/new?size=3')"
+env NAME=$HOSTNAME
+env NODE1NAME=ubuntu
+env NODE1IP=10.2.242.114
+env NODE1NAME=ubuntu2
+env NODE1IP=10.2.242.224
+env NODE1NAME=ubuntu3
+env NODE1IP=10.2.242.138
 
-/usr/local/bin/etcd \
-  -name $HOSTNAME -initial-advertise-peer-urls http://$IP:2380 \
-  -listen-peer-urls http://$IP:2380 \
-  -listen-client-urls http://$IP:2379,http://127.0.0.1:2379 \
-  -advertise-client-urls http://$IP:2379 \
-  -initial-cluster-token etcd-cluster-1 \
-  -initial-cluster etcd-01=http://10.2.242.114:2380,etcd-02=http://10.2.242.224:2380,etcd-03=http://10.2.242.138:2380 \
-  -initial-cluster-state new
+env DATADIR="/var/dtank/etcd"
+
+
+-name $HOSTNAME \
+  -discovery "https://discovery.etcd.io/52b6eba687a71bba233a44be92dc3d87" \
+ -advertise-client-urls http://${IP}:2379,http://${IP}:4001 \
+ -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
+ -initial-advertise-peer-urls http://${IP}:2380 \
+ -listen-peer-urls http://0.0.0.0:2380 \
+ -initial-cluster-token etcd-cluster-1 \
+ -initial-cluster-state new
+
+#/usr/local/bin/etcd \
+#  -name $HOSTNAME -initial-advertise-peer-urls http://$IP:2380 \
+#  -listen-peer-urls http://$IP:2380 \
+#  -listen-client-urls http://$IP:2379,http://127.0.0.1:2379 \
+#  -advertise-client-urls http://$IP:2379 \
+#  -initial-cluster-token etcd-cluster-1 \
+#  -initial-cluster etcd-01=http://10.2.242.114:2380,etcd-02=http://10.2.242.224:2380,etcd-03=http://10.2.242.138:2380 \
+#  -initial-cluster-state new
 
 #>>/var/log/etcd.log 2>&1
