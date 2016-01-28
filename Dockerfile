@@ -3,7 +3,7 @@ FROM ubuntu:14.04
 MAINTAINER benharker@mac.com
 
 #install the basics
-RUN apt-get update ; apt-get install -y curl wget nano ;
+RUN apt-get update ; apt-get install -y curl wget nano facter ;
 
 #let's grab etcd
 RUN curl -L  https://github.com/coreos/etcd/releases/download/v2.2.4/etcd-v2.2.4-linux-amd64.tar.gz -o etcd-v2.2.4-linux-amd64.tar.gz ;
